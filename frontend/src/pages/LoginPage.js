@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import Swal from "sweetalert2"
 import axios from "axios"
+import http from "../http"
 
 export default function LoginPage(){
     const [email, setEmail] = useState("")
@@ -17,7 +18,7 @@ export default function LoginPage(){
             return;
         }
 
-        const { data } = await axios.post("http://localhost:5000/api//users/login", { email, password })
+        const { data } = await http.post("/users/login", { email, password })
         if (data.error) {
             setError(data.error)
         }

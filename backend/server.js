@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 
 //REGISTER ROUTE//REGISTER ROUTE
 
-app.post("/api/user/register", async (req , res) => {
+app.post("/api/users/register", async (req , res) => {
     console.log(req.body)
     // check if existing user
     const existingUser = await User.findOne({ email: req.body.email })
@@ -43,7 +43,7 @@ app.post("/api/user/register", async (req , res) => {
     }
 })
 
-app.post("/api/user/login", async (req, res) => {
+app.post("/api/users/login", async (req, res) => {
     // console.log(body)
     // check if the email exists
     const existingUser = await User.findOne({ email: req.body.email })

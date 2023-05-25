@@ -4,6 +4,7 @@ import Swal from "sweetalert2"
 import axios from "axios"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import http from "../http"
 
 
 
@@ -32,7 +33,7 @@ export default function RegisterPage(){
             setError("Passwords do not match")
             return
           }
-          const { data } = await axios.post("http://localhost:5000/api/users/register",{ email, username, password })
+          const { data } = await http.post("/users/register",{ email, username, password })
           if (data.error){
             setError(data.error)
           }
