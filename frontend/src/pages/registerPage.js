@@ -9,7 +9,7 @@ import http from "../http"
 
 
 
-export default function RegisterPage(){
+    export default function RegisterPage(){
         const [email, setEmail] = useState("")
         const [username, setUsername] = useState("")
         const [password, setPassword] = useState("")
