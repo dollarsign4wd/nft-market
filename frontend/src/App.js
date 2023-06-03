@@ -6,6 +6,8 @@ import SubmitCollectionPage from './pages/SubmitCollectionPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/registerPage'
+import CollectionsPage from './pages/CollectionsPage';
+import ProfilePage from './pages/ProfilePage';
 
 
 
@@ -17,6 +19,8 @@ function App() {
   <Route path="/" element={<HomePage/>}></Route>
   <Route path="/register" element={<RegisterPage/>}></Route>
   <Route path="/login" element={<LoginPage/>}></Route>
+  <Route path="/collections" element={<CollectionsPage/>}></Route>
+  <Route path="/profile" element={<ProfilePage/>}></Route>
  
  
 

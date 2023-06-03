@@ -1,16 +1,50 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
-
+import Swal from "sweetalert2";
+import axios from "axios"
+import http from "../http"
+import { useNavigate } from "react-router-dom";
 export default function SubmitCollectionPage() {
     const[title,setTitle]=useState("")
     const[price,setPrice]= useState()
     const[image,setImage]=useState()
     const[description,setDescription]=useState()
     const[error, setError]= useState("")
-    function SubmitHandler(e){
+    const navigate = useNavigate()
+
+    const userInfo = JSON.parse (localStorage.getItem("userInfo"))
+    async function SubmitHandler(e){
         e.preventDefault()
-        if(!title|| !image || !price || !description){
+        if (!image){
+            setError("Please Select An Avatar")
+            return
+        }
+        if(!title || !price || !description){
             setError("please fill all field")
+            return;
+        }
+        const {data} =  await http.post("/collections",{title, image,price ,description, owner : userInfo._id})
+        if (data.error){
+            setError(data)
+        }
+        if (data.success){
+            navigate("/dashboard")
+            Swal.fire("Done",data.success,"successfully saved")
+        }
+    }
+    async function uploadImage(e){
+        const file = e.target.files[0];
+        const data = new FormData();
+        data.append("file", file);
+        data.append ("upload_preset" , "dollarsign")
+        data.append("cloud_name" , "ddqg9lwgo")
+        try {
+            const result = await axios.post("https://api.cloudinary.com/v1_1/ddqg9lwgo/image/upload",data)
+            Swal.fire("image approved, proceed to save your NFt")
+     setImage(result.data.secure_url)
+        } catch (error) {
+            Swal.fire(error.message)
+            
         }
     }
     return <>
@@ -42,7 +76,8 @@ export default function SubmitCollectionPage() {
                     {/* Main */}
                     <main className="p-3 bg-surface-secondary">
                         <h2 className="text-center mb-5">SUBMIT COLLECTION</h2>
-                        <form>
+                        <form onSubmit={SubmitHandler}>
+                            {error && <div className="class alert alert-danger my-3 p-3">{error}</div> }
                             {/* Email input */}
                             <div className="form-outline mb-2">
                                 <input  onChange={ e =>setTitle(e.target.value)}type="text" id="form1Example1" className="form-control" />
@@ -50,7 +85,7 @@ export default function SubmitCollectionPage() {
                             </div>
                             {/* Password input */}
                             <div className="form-outline mb-2">
-                                <input   onChange={ e =>setImage(e.target.value)}type="text" id="form1Example2" className="form-control" />
+                                <input   onChange={uploadImage}type="file" id="form1Example2" className="form-control" accept="image/*" />
                                 <label className="form-label" htmlFor="form1Example2">Collection Avatar</label>
                             </div>
                             <div className="form-outline mb-2">
@@ -63,7 +98,7 @@ export default function SubmitCollectionPage() {
                             </div>
 
                             {/* Submit button */}
-                            <button onClick={SubmitHandler} type="submit" className="btn btn-primary btn-block w-100 form-control">Submit collection</button>
+                            <button  type="submit" className="btn btn-primary btn-block w-100 form-control">Submit collection</button>
                         </form>
 
                     </main>

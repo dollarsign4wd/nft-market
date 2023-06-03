@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
 export default function Header() {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    function logout(){
+        localStorage.removeItem("userInfo");
+    }
     return <>
         <nav className="navbar main-navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -18,20 +22,22 @@ export default function Header() {
                         </li>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                User
+                            {userInfo ? userInfo.username : "User"}
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/login">Login</Link></li>
                                 <li><Link className="dropdown-item" to={"/register"}>Register</Link></li>
+                                <li onClick={logout}><a className="dropdown-item" href={"/"}>Logout</a></li>
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>
                                  <li><a className="dropdown-item" href="#">Something else here</a></li>
                             </ul>
                         </li>
-                        <li className="nav-item">
+                        {userInfo &&  <li className="nav-item">
                             <Link className="nav-link " to={"/dashboard"}>Dashboard</Link>
-                        </li>
+                        </li> } 
+                       
                     </ul>
                     <form className="d-flex" role="search">
                         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />

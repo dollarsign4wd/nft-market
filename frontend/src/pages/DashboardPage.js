@@ -1,6 +1,34 @@
+import { useEffect, useState } from "react"
 import Sidebar from "../components/Sidebar"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import http from "../http";
+import Swal from "sweetalert2";
 export default function DashboardPage() {
+    const [collections,setCollections]= useState([]);
+   const userInfo = JSON.parse(localStorage.getItem(`userInfo`))
+   const navigate = useNavigate()
+   
+   async function deleteHandler(id){
+    const {data} = await http.delete(`/collections/${id}`)
+    if(data.error){
+        
+      Swal.fire("Error", data.error, "error")
+    }
+    if(data.success){
+        Swal.fire("Done", data.success, "success");
+        window.location.reload()
+
+}}
+    async function getCollections() {
+        const { data } = await http.get(`/collections/owner/${userInfo._id}`)
+         
+        setCollections(data)}
+
+    useEffect(() => {
+        getCollections();
+        !userInfo && navigate("/login")
+      }, [])
+      
     return <>
 
         <div>
@@ -19,7 +47,7 @@ export default function DashboardPage() {
                                 <div className="row align-items-center">
                                     <div className="col-sm-6 col-12 mb-4 mb-sm-0 pb-5">
                                         {/* Title */}
-                                        <h1 className="h2 mb-0 ls-tight">Dashboard</h1>
+                                       
                                     </div>
 
                                 </div>
@@ -38,8 +66,8 @@ export default function DashboardPage() {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">Budget</span>
-                                                    <span className="h3 font-bold mb-0">$750.90</span>
+                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">Total Collections</span>
+                                                    <span className="h3 font-bold mb-0">{collections.length}</span>
                                                 </div>
                                                 <div className="col-auto">
                                                     <div className="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
@@ -61,7 +89,7 @@ export default function DashboardPage() {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">New projects</span>
+                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">Total Amount</span>
                                                     <span className="h3 font-bold mb-0">215</span>
                                                 </div>
                                                 <div className="col-auto">
@@ -135,325 +163,44 @@ export default function DashboardPage() {
                                     <table className="table table-hover table-nowrap">
                                         <thead className="thead-light">
                                             <tr>
-                                                <th scope="col">Name</th>
                                                 <th scope="col">Date</th>
-                                                <th scope="col">Company</th>
-                                                <th scope="col">Offer</th>
-                                                <th scope="col">Meeting</th>
+                                                <th scope="col">Collection</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Status</th>
                                                 <th />
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Robert Fox
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Feb 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-1.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Dribbble
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $3.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-success" />Scheduled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1610271340738-726e199f0258?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Darlene Robertson
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Apr 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-2.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Netguru
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $2.750
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-warning" />Postponed
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1610878722345-79c5eaf6a48c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Theresa Webb
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Mar 20, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-3.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Figma
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $4.200
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-success" />Scheduled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1612422656768-d5e4ec31fac0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Kristin Watson
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Feb 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-4.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Mailchimp
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $3.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-dark" />Not discussed
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1608976328267-e673d3ec06ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Cody Fisher
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Apr 10, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-5.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Webpixels
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $1.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-danger" />Canceled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Robert Fox
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Feb 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-1.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Dribbble
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $3.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-success" />Scheduled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1610271340738-726e199f0258?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Darlene Robertson
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Apr 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-2.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Netguru
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $2.750
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-warning" />Postponed
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1610878722345-79c5eaf6a48c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Theresa Webb
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Mar 20, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-3.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Figma
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $4.200
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-success" />Scheduled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1612422656768-d5e4ec31fac0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Kristin Watson
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Feb 15, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-4.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Mailchimp
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $3.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-dark" />Not discussed
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img alt="..." src="https://images.unsplash.com/photo-1608976328267-e673d3ec06ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" className="avatar avatar-sm rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Cody Fisher
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    Apr 10, 2021
-                                                </td>
-                                                <td>
-                                                    <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-5.png" className="avatar avatar-xs rounded-circle me-2" />
-                                                    <a className="text-heading font-semibold" href="#">
-                                                        Webpixels
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    $1.500
-                                                </td>
-                                                <td>
-                                                    <span className="badge badge-lg badge-dot">
-                                                        <i className="bg-danger" />Canceled
-                                                    </span>
-                                                </td>
-                                                <td className="text-end">
-                                                    <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                                    <button type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                        {collections.map(x => {
+                                        return  <tr> 
+                                      
+                                        <td>
+                                         {x.createdAt && x.createdAt.substr(0,10)}
+                                        </td>
+                                        <td>
+                                            <img alt="..." src={x.image} className="avatar avatar-xs rounded-circle me-2 collection-image" />
+                                            <a className="text-heading font-semibold ms-5" href="#">
+                                                {x.title}
+                                                
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {x.price} Eth
+                                        </td>
+                                        <td>
+                                            <span className="badge badge-lg badge-dot">
+                                                <i className="bg-success" />Scheduled
+                                            </span>
+                                        </td>
+                                        <td className="text-end">
+                                            <a href="#" className="btn btn-sm btn-neutral">View</a>
+                                            <button   onClick={() => deleteHandler(x._id)} type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
+                                                <i  className="bi bi-trash" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                        })}
+                                          
                                         </tbody>
                                     </table>
                                 </div>
