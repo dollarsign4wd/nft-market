@@ -3,7 +3,7 @@ import { Link, useNavigate, } from "react-router-dom"
 import Swal from "sweetalert2"
 import axios from "axios"
 import http from "../http"
-
+import Header from "../components/Header"
 export default function LoginPage(){
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -31,6 +31,7 @@ export default function LoginPage(){
 
 
     return <>
+    <Header></Header>
         <div className="login row ">
          
             <form onSubmit={submitHandler} action="" className="form col-lg-7 col-sm-12  p-3">

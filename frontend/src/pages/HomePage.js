@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import Header from "../components/Header"
 import http from "../http"
 import { get } from "mongoose"
+import Footer from "../components/Footer"
+
 export default function HomePage() {
 
   const [collections, setCollections] = useState([])
@@ -16,6 +18,7 @@ export default function HomePage() {
   }, [])
   return <>
     <Header></Header>
+    
     <div className="hero-section">
       <img src="https://uploads-ssl.webflow.com/604065ca49779f0ad829e4d0/604067e236038ae18cdfe1b7_agif2opt.gif" alt="" />
       <h3>NFT MARKET PLACE</h3>
@@ -51,7 +54,7 @@ export default function HomePage() {
     </div>
 
 
-
+    <Footer></Footer>
 
 
   </>

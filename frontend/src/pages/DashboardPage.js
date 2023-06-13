@@ -1,34 +1,36 @@
 import { useEffect, useState } from "react"
 import Sidebar from "../components/Sidebar"
-import {Link, useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import http from "../http";
 import Swal from "sweetalert2";
 export default function DashboardPage() {
-    const [collections,setCollections]= useState([]);
-   const userInfo = JSON.parse(localStorage.getItem(`userInfo`))
-   const navigate = useNavigate()
-   
-   async function deleteHandler(id){
-    const {data} = await http.delete(`/collections/${id}`)
-    if(data.error){
-        
-      Swal.fire("Error", data.error, "error")
-    }
-    if(data.success){
-        Swal.fire("Done", data.success, "success");
-        window.location.reload()
+    const [collections, setCollections] = useState([]);
+    const userInfo = JSON.parse(localStorage.getItem(`userInfo`))
+    const navigate = useNavigate()
 
-}}
+    async function deleteHandler(id) {
+        const { data } = await http.delete(`/collections/${id}`)
+        if (data.error) {
+
+            Swal.fire("Error", data.error, "error")
+        }
+        if (data.success) {
+            Swal.fire("Done", data.success, "success");
+            window.location.reload()
+
+        }
+    }
     async function getCollections() {
         const { data } = await http.get(`/collections/owner/${userInfo._id}`)
-         
-        setCollections(data)}
+
+        setCollections(data)
+    }
 
     useEffect(() => {
         getCollections();
         !userInfo && navigate("/login")
-      }, [])
-      
+    }, [])
+
     return <>
 
         <div>
@@ -47,7 +49,7 @@ export default function DashboardPage() {
                                 <div className="row align-items-center">
                                     <div className="col-sm-6 col-12 mb-4 mb-sm-0 pb-5">
                                         {/* Title */}
-                                       
+
                                     </div>
 
                                 </div>
@@ -107,12 +109,14 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-xl-3 col-sm-6 col-12">
+                                {
+                                    userInfo && userInfo.isAdmin &&
+                                    <div className="col-xl-3 col-sm-6 col-12">
                                     <div className="card shadow border-0">
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">Total hours</span>
+                                                    <span className="h6 font-semibold text-muted text-sm d-block mb-2">Total Users</span>
                                                     <span className="h3 font-bold mb-0">1.400</span>
                                                 </div>
                                                 <div className="col-auto">
@@ -130,6 +134,8 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                 </div>
+                                }
+                               
                                 <div className="col-xl-3 col-sm-6 col-12">
                                     <div className="card shadow border-0">
                                         <div className="card-body">
@@ -157,7 +163,7 @@ export default function DashboardPage() {
                             <div className="card shadow border-0 mb-7">
                                 <div className="card-header d-flex justify-content-between align-items-center ">
                                     <h5 className="mb-0">My NFTs</h5>
-                                   <Link to={"/submit-collection"}> <button className="btn btn-primary">Submit Collection</button></Link>
+                                    <Link to={"/submit-collection"}> <button className="btn btn-primary">Submit Collection</button></Link>
                                 </div>
                                 <div className="table-responsive">
                                     <table className="table table-hover table-nowrap">
@@ -171,36 +177,36 @@ export default function DashboardPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        {collections.map(x => {
-                                        return  <tr> 
-                                      
-                                        <td>
-                                         {x.createdAt && x.createdAt.substr(0,10)}
-                                        </td>
-                                        <td>
-                                            <img alt="..." src={x.image} className="avatar avatar-xs rounded-circle me-2 collection-image" />
-                                            <a className="text-heading font-semibold ms-5" href="#">
-                                                {x.title}
-                                                
-                                            </a>
-                                        </td>
-                                        <td>
-                                            {x.price} Eth
-                                        </td>
-                                        <td>
-                                            <span className="badge badge-lg badge-dot">
-                                                <i className="bg-success" />Scheduled
-                                            </span>
-                                        </td>
-                                        <td className="text-end">
-                                            <a href="#" className="btn btn-sm btn-neutral">View</a>
-                                            <button   onClick={() => deleteHandler(x._id)} type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
-                                                <i  className="bi bi-trash" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                        })}
-                                          
+                                            {collections.map(x => {
+                                                return <tr>
+
+                                                    <td>
+                                                        {x.createdAt && x.createdAt.substr(0, 10)}
+                                                    </td>
+                                                    <td>
+                                                        <img alt="..." src={x.image} className="avatar avatar-xs rounded-circle me-2 collection-image" />
+                                                        <a className="text-heading font-semibold ms-5" href="#">
+                                                            {x.title}
+
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        {x.price} Eth
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge badge-lg badge-dot">
+                                                            <i className="bg-success" />Scheduled
+                                                        </span>
+                                                    </td>
+                                                    <td className="text-end">
+                                                        <a href="#" className="btn btn-sm btn-neutral">View</a>
+                                                        <button onClick={() => deleteHandler(x._id)} type="button" className="btn btn-sm btn-square btn-neutral text-danger-hover">
+                                                            <i className="bi bi-trash" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            })}
+
                                         </tbody>
                                     </table>
                                 </div>

@@ -68,11 +68,15 @@ export default function Sidebar() {
                                 <i className="bi bi-bookmarks" /> Collections
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">
+                        {
+                            userInfo&& userInfo.isAdmin &&
+                            <li className="nav-item">
+                            <a className="nav-link" href="/users">
                                 <i className="bi bi-people" /> Users
                             </a>
                         </li>
+                        }
+                        
                     </ul>
                     
                     {/* Push content down */}
