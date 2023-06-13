@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import Header from "../components/Header"
 import http from "../http"
-import { get } from "mongoose"
 import Footer from "../components/Footer"
 
 export default function HomePage() {
